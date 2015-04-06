@@ -1,5 +1,63 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
-<code class="debug_dump">
-<%= debug session %>
-    </code>
+<div id='sidebar'>
+  <%= render :partial => 'layouts/partial/sidebar' %>
+</div>
+<div id="page-content-wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <h3>
+          <span style="display: block; width: 100%; font-size: 17px;">Hi and welcome to place where you can</span>
+          share and test your C, Rubby and Rust code.
+        </h3>
+
+        <p>In order to submit your code or comment on somebody else code you must login/register.</p>
+        <a href="#menu-toggle" id="menu-toggle">Toggle Menu</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="page-content-wrapper" style="background-color: #ccc;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <% if !user_signed_in? %>
+
+            <% if @last_snippet.count > 0 %>
+                <h3>
+                  <span style="color: #fafafa;display: block; width: 100%; font-size: 17px;">Checkout latest code snippet</span>
+                </h3>
+
+                <input disabled value="<%= @last_snippet[0].title %>" type="text" class="form-control" name="title"/> <br/>
+                <input disabled value="<%= @last_snippet[0].code_type %>" type="text" class="form-control" name="type"/> <br/>
+                <textarea style="width: 100%; height: 300px;"><%= @last_snippet[0].body %></textarea>
+                <a class="btn btn-danger">Run code</a>
+            <% else
+                 0 %>
+                <h3>
+                  <span style="color: #fafafa;display: block; width: 100%; font-size: 17px;">Platform is empty no code snippets.</span>
+                </h3>
+            <% end %>
+        <% else %>
+            <div style="width: 70%; float: left;">
+              <%= form_tag("/code/submit", method: "post") do %>
+
+                  <select class="form-control" name="type">
+                    <option>Select language</option>
+                    <option value="ruby">Ruby</option>
+                    <option value="c">C</option>
+                    <option value="rust">Rust</option>
+                  </select>
+                  <input placeholder="Code title" type="text" class="form-control" name="title"/><br />
+                  <textarea name="value" class="form-control" style="width:100%;height: 300px;"></textarea>
+                  <br/>
+                  <input type="submit" class="btn btn-danger" value="Run code">
+              <% end %>
+            </div>
+            <div>
+              <span style="display: block; text-align: center; font-size: 14px; color: #fafafa; padding-top: 50px;">Code results will be displayed here.</span>
+            </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

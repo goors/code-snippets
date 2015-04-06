@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  post 'code/submit'
+
   get 'home/index'
 
   devise_for :users
