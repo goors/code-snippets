@@ -13,28 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20150406181655) do
 
-  create_table "code_comments", force: :cascade do |t|
-    t.text     "body",            limit: 65535
-    t.integer  "user_id",         limit: 4
-    t.integer  "code_snippet_id", limit: 4
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-  end
-
-  add_index "code_comments", ["code_snippet_id"], name: "index_code_comments_on_code_snippet_id", using: :btree
-  add_index "code_comments", ["user_id"], name: "index_code_comments_on_user_id", using: :btree
-
-  create_table "code_snippets", force: :cascade do |t|
-    t.string   "title",      limit: 255
-    t.text     "body",       limit: 65535
-    t.string   "code_type",  limit: 255
-    t.integer  "user_id",    limit: 4
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-  end
-
-  add_index "code_snippets", ["user_id"], name: "index_code_snippets_on_user_id", using: :btree
-
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "", null: false
     t.string   "encrypted_password",     limit: 255, default: "", null: false
@@ -55,7 +33,4 @@ ActiveRecord::Schema.define(version: 20150406181655) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
-  add_foreign_key "code_comments", "code_snippets"
-  add_foreign_key "code_comments", "users"
-  add_foreign_key "code_snippets", "users"
 end

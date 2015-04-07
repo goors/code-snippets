@@ -1,63 +1,133 @@
 <div id='sidebar'>
   <%= render :partial => 'layouts/partial/sidebar' %>
 </div>
-<div id="page-content-wrapper">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-lg-12">
-        <h3>
-          <span style="display: block; width: 100%; font-size: 17px;">Hi and welcome to place where you can</span>
-          share and test your C, Rubby and Rust code.
-        </h3>
-
-        <p>In order to submit your code or comment on somebody else code you must login/register.</p>
-        <a href="#menu-toggle" id="menu-toggle">Toggle Menu</a>
-      </div>
-    </div>
-  </div>
-</div>
+<%= render :partial => 'layouts/partial/top' %>
 <div id="page-content-wrapper" style="background-color: #ccc;">
   <div class="container-fluid">
     <div class="row">
       <div class="col-lg-12">
-        <% if !user_signed_in? %>
 
-            <% if @last_snippet.count > 0 %>
-                <h3>
-                  <span style="color: #fafafa;display: block; width: 100%; font-size: 17px;">Checkout latest code snippet</span>
-                </h3>
-
-                <input disabled value="<%= @last_snippet[0].title %>" type="text" class="form-control" name="title"/> <br/>
-                <input disabled value="<%= @last_snippet[0].code_type %>" type="text" class="form-control" name="type"/> <br/>
-                <textarea style="width: 100%; height: 300px;"><%= @last_snippet[0].body %></textarea>
-                <a class="btn btn-danger">Run code</a>
-            <% else
-                 0 %>
-                <h3>
-                  <span style="color: #fafafa;display: block; width: 100%; font-size: 17px;">Platform is empty no code snippets.</span>
-                </h3>
-            <% end %>
-        <% else %>
-            <div style="width: 70%; float: left;">
-              <%= form_tag("/code/submit", method: "post") do %>
-
-                  <select class="form-control" name="type">
-                    <option>Select language</option>
-                    <option value="ruby">Ruby</option>
-                    <option value="c">C</option>
-                    <option value="rust">Rust</option>
-                  </select>
-                  <input placeholder="Code title" type="text" class="form-control" name="title"/><br />
-                  <textarea name="value" class="form-control" style="width:100%;height: 300px;"></textarea>
-                  <br/>
-                  <input type="submit" class="btn btn-danger" value="Run code">
+        <div style="width: 50%; float: left;">
+          <%= form_tag("/code/submit.json", method: "post", class: "run_code_form") do %>
+              <% if @snippet %>
+                  <input type="hidden" name="public" value="1"/>
               <% end %>
-            </div>
-            <div>
-              <span style="display: block; text-align: center; font-size: 14px; color: #fafafa; padding-top: 50px;">Code results will be displayed here.</span>
-            </div>
-        <% end %>
+              <select class="form-control" name="type">
+                <option>Select language</option>
+                <option
+                <% if @snippet %>
+                <% if @snippet.code_type == 'ruby' %> selected
+                <% end %>
+                <% end %>value="ruby">Ruby
+                </option>
+                <option
+                <% if @snippet %>
+                <% if @snippet.code_type == 'c' %> selected
+                <% end %>
+                <% end %> value="c">C
+                </option>
+                <option
+                <% if @snippet %>
+                <% if @snippet.code_type == 'rust' %> selected
+                <% end %>
+                <% end %> value="rust">Rust
+                </option>
+              </select>
+              <input
+              <% if @snippet %>value="<%= @snippet.title %>"
+              <% else %> placeholder="Code title"
+              <% end %>  type="text" class="form-control" name="title"/><br/>
+              <textarea name="value" class="form-control" style="width:100%;height: 300px;"><% if @snippet %><%= @snippet.body %>  <% end %></textarea>
+              <br/>
+              <input type="submit" class="btn btn-danger run_code" value="Run code">
+          <% end %>
+        </div>
+
+        <div style="  background-color: #fafafa;
+                width: <% if !@snippet %>47%<% else %>29%<% end %>;
+                float: left;
+                color: #999;
+                margin-left: 1%; height: 384px;">
+          <span style="display: block; text-align: center; font-size: 14px; padding-top: 50px; width: 90%; margin: 0 auto;" class="code_result">Code results will be displayed here.</span>
+        </div>
+        <div style="  background-color: #fafafa;
+                width: <% if @snippet %>19%<% else %>1%<% end %>;
+                float: left;
+                color: #999;
+                margin-left: 1%; height: 384px;">
+              <span style="display: block; text-align: center; font-size: 14px; padding-top: 50px; width: 90%; margin: 0 auto;">
+                <% if @snippet %><h4>Comments</h4><% end %>
+                <% if user_signed_in? and @snippet %>
+                    <%= form_tag("/home/comment.json", method: "post", class: "add_comment_form") do %>
+                        <input type="hidden" value="<%= @id %>" name="snippet_id"/>
+                        <textarea name="comment" class="form-control" placeholder="Do you have comment?"></textarea>
+                        <a href="javascript: void(0)" onclick="javascript: addComment()">Add comment</a> <br/><br/>
+                    <% end %>
+                <% end %>
+
+                <% if @snippet %>
+                <% if @comments %>
+                  <% @comments.each do |c| %>
+                    <ul class="ul_comments">
+                      <li><%= c.body %> <br/><span style="font-size: 10px"><%= c.created_at %></span></li>
+                    </ul>
+                    <% end %>
+                <% end %>
+                <% end %>
+              </span>
+        </div>
       </div>
     </div>
   </div>
 </div>
+<script>
+    var request;
+    function fire_async(data, url) {
+
+
+        request = $.ajax({
+            url: url,
+            method: "POST",
+            data: data,
+            dataType: "json"
+        });
+    }
+    $(document).ready(function () {
+        $(".run_code").on("click", function (ev) {
+            ev.preventDefault();
+            fire_async(getFormData($(".run_code_form")), $(".run_code_form").attr("action"));
+
+
+            request.done(function (msg) {
+                var res = eval(msg);
+                $(".code_result").html('<pre>' + res.result + '</pre>');
+            });
+
+            request.fail(function (jqXHR, textStatus) {
+                alert("Request failed: " + textStatus);
+            });
+        })
+    });
+    function addComment() {
+
+
+        fire_async(getFormData($(".add_comment_form")), $(".add_comment_form").attr("action"));
+        request.done(function (msg) {
+            var res = eval(msg);
+            console.log(res);
+            $(".ul_comments").append('<li>' + res.result.comment + '<br /><span style="font-size: 10px">' + res.result.created_at + '</span></li>');
+
+        });
+    }
+    function getFormData($form) {
+        var unindexed_array = $form.serializeArray();
+        var indexed_array = {};
+
+        $.map(unindexed_array, function (n, i) {
+            indexed_array[n['name']] = n['value'];
+        });
+
+        return indexed_array;
+    }
+
+</script>
