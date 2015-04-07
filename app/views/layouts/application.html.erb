@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html style="background-color: #ccc;">
+<head>
+  <title>FirstApp</title>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<div style="position: absolute;
+        width: 300px;
+        left: 50%;
+        background-color: #ffff00; text-align: center;
+        margin-left: -150px;
+">
+<% flash.each do |name, msg| -%>
+    <%= content_tag :div, msg, class: name %>
+<% end -%>
+</div>
+<div id="wrapper" style="background-color: #fafafa;" class="toggled">
+  <%= yield %>
+</div>
+
+
+
+<script>
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>
+</body>
+</html>

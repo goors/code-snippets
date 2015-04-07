@@ -1,0 +1,34 @@
+<div id="sidebar-wrapper">
+  <ul class="sidebar-nav">
+
+    <li>
+      <%= link_to('Snippets', snippets_index_path) %>
+    </li>
+    <% if !user_signed_in? %>
+    <li>
+
+      <%= link_to('Register', new_user_registration_path)  %>
+    </li>
+    <li>
+      <%= link_to('Sing in', new_user_session_path) %>
+    </li>
+
+    <% else %>
+
+        <li>
+          <%= link_to('My snippets', home_my_snippets_path)  %>
+        </li>
+        <li>
+          <%= link_to('Add snippet', snippets_new_path)  %>
+        </li>
+        <li>
+          <%= link_to('Profile', edit_user_registration_path)  %>
+        </li>
+        <li>
+          <%= link_to('Logout', destroy_user_session_path) %>
+
+        </li>
+    <% end %>
+
+  </ul>
+</div>

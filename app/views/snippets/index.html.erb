@@ -1,0 +1,43 @@
+<div id='sidebar'>
+  <%= render :partial => 'layouts/partial/sidebar' %>
+</div>
+<%= render :partial => 'layouts/partial/top' %>
+<div id="page-content-wrapper" style="background-color: #ccc;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+            <table class="table table-responsive">
+              <thead>
+                <th>Title</th>
+                <th>Code type</th>
+                <th>Creator</th>
+                <th>Created at</th>
+                <th>View</th>
+              </thead>
+              <tbody>
+              <% if @snippets.count > 0 %>
+                  <% @snippets.each do |s| %>
+                    <tr>
+                      <td><%= s.title %></td>
+                      <td><%= s.code_type %></td>
+                      <td><%= s.user.email %></td>
+                      <td><%= s.created_at %></td>
+                      <td><%= link_to('Show me', view_single_path(s.id), class: "btn btn-default") %></td>
+                    </tr>
+                  <% end %>
+              <% else %>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td>No snippets in here.</td>
+                    <td></td>
+                    <td></td>
+
+                  </tr>
+              <% end %>
+              </tbody>
+            </table>
+      </div>
+    </div>
+  </div>
+</div>
