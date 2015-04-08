@@ -10,34 +10,11 @@
         <div style="width: 50%; float: left;">
           <%= form_tag("/code/submit.json", method: "post", class: "run_code_form") do %>
               <% if @snippet %>
-                  <input type="hidden" name="public" value="1"/>
-              <% end %>
-              <select class="form-control" name="type">
-                <option>Select language</option>
-                <option
-                <% if @snippet %>
-                <% if @snippet.code_type == 'ruby' %> selected
-                <% end %>
-                <% end %>value="ruby">Ruby
-                </option>
-                <option
-                <% if @snippet %>
-                <% if @snippet.code_type == 'c' %> selected
-                <% end %>
-                <% end %> value="c">C
-                </option>
-                <option
-                <% if @snippet %>
-                <% if @snippet.code_type == 'rust' %> selected
-                <% end %>
-                <% end %> value="rust">Rust
-                </option>
-              </select>
-              <input
-              <% if @snippet %>value="<%= @snippet.title %>"
-              <% else %> placeholder="Code title"
-              <% end %>  type="text" class="form-control" name="title"/><br/>
-              <textarea name="value" class="form-control" style="width:100%;height: 300px;"><% if @snippet %><%= @snippet.body %>  <% end %></textarea>
+                  <%= render :partial => 'layouts/partial/view_snippet', @snippet=>@snippet %>
+                  <% else %>
+                  <%= render :partial => 'layouts/partial/new_snippet', @snippet=>@snippet %>
+              <% end%>
+
               <br/>
               <input type="submit" class="btn btn-danger run_code" value="Run code">
           <% end %>

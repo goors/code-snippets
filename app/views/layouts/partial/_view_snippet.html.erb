@@ -1,0 +1,11 @@
+<input type="hidden" name="public" value="1"/>
+<select class="form-control" name="type">
+  <option>Select language</option>
+  <option
+  <% if @snippet.code_type == 'ruby' %> selected <% end %> value="ruby">Ruby</option>
+  <option<% if @snippet.code_type == 'c' %> selected <% end %> value="c">C</option>
+  <option<% if @snippet.code_type == 'rust' %> selected <% end %> value="ruby">Rust</option>
+
+</select>
+<input value="<%= @snippet.title %>" type="text" class="form-control" name="title"/><br/>
+<textarea name="value" class="form-control" style="width:100%;height: 300px;"><%= @snippet.body %></textarea>

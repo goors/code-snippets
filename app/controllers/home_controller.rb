@@ -1,10 +1,5 @@
 class HomeController < ApplicationController
 
-  def index
-    @last_snippet = CodeSnippet.includes(:user).last(1).reverse
-
-  end
-
   def snippet
 
     id = params[:id]
@@ -16,7 +11,6 @@ class HomeController < ApplicationController
   end
 
   def my_snippets
-
 
     @snippets = CodeSnippet.where(["user_id = :u", { u: current_user.id }])
     render :template => 'snippets/index'
