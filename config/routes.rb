@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   get "home/my_snippets"
 
   devise_for :users
-  get 'api/snippets'
+  get 'snippets/api'
 
   root 'snippets#index'
 
